@@ -11,12 +11,17 @@ public class Hacker : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        ShowMainMenu();
+    }
+
+    public void ShowMainMenu()
+    {
+        Terminal.ClearScreen();
         Terminal.WriteLine(initialText);
     }
 
-    // Update is called once per frame
-    void Update()
+    void OnUserInput(string input)
     {
-        
+        print(input);
     }
 }

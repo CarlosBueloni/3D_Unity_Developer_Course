@@ -226,14 +226,15 @@ MonoBehaviour:
 
 
     - Press 1 for the Local High
-    School
+    School.
 
-    - Press 2 for the Airpot
+    - Press 2 for the Airpot.
 
-    - Press 3 NASA
+    - Press 3 NASA.
 
 
-    Enter your selection:'
+    Enter your
+    selection:'
 --- !u!1001 &1997048162
 PrefabInstance:
   m_ObjectHideFlags: 0

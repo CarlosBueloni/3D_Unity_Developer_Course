@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Hacker : MonoBehaviour {
 
@@ -10,7 +7,7 @@ public class Hacker : MonoBehaviour {
     [Multiline (10)]
     private string initialText;
     private string[] level1Passwords = { "math", "english", "ruler", "books", "pencil" };
-    private string[] level2Passwords = { "aircratf", "hangar", "propeller", "luggage","runaway"};
+    private string[] level2Passwords = { "airplane", "hangar", "propeller", "luggage","runaway"};
 
     //Game State
     private enum Screen
@@ -56,17 +53,12 @@ public class Hacker : MonoBehaviour {
 
     private void RunMainMenu(string input)
     {
-        if (input == "1")
+        bool isValidLevelNumber = (input == "1" || input == "2");
+
+        if (isValidLevelNumber)
         {
-            level = 1;
-            password = level1Passwords[2]; // todo make random later
-            StartGame();
-        }
-        else if (input == "2")
-        {
-            level = 2;
-            password = level2Passwords[4]; // todo make random later
-            StartGame();
+            level = int.Parse(input);
+            AskForPassword();
         }
         else
         {
@@ -74,28 +66,73 @@ public class Hacker : MonoBehaviour {
         }
     }
 
-    void StartGame () {
+    void AskForPassword ()
+    {
         currentScreen = Screen.Password;
-        Terminal.WriteLine ("You chose level " + level+ ".");
-        Terminal.WriteLine("");
-        Terminal.WriteLine ("Please type your password: ");
+        Terminal.ClearScreen();
+        SetRandomPassword();
+        Terminal.WriteLine("Enter your password, hint: " + password.Anagram());
+    }
+
+    private void SetRandomPassword()
+    {
+        switch (level)
+        {
+            case 1:
+                password = level1Passwords[Random.Range(0, level1Passwords.Length)];
+                break;
+            case 2:
+                password = level2Passwords[Random.Range(0, level2Passwords.Length)];
+                break;
+            default:
+                Debug.LogError("Invalid Level Number");
+                break;
+        }
     }
 
     private void CheckPassword(string input)
     {
         if (input == password)
         {
-            RunWinScreen();
+            DisplayWinScreen();
         }
         else
         {
-            Terminal.WriteLine("Please try again.");
+            AskForPassword();
         }
     }
 
-    private void RunWinScreen()
+    private void DisplayWinScreen()
     {
         currentScreen = Screen.Win;
-        Terminal.WriteLine("Congratulations! You hacked level " + level);
+        Terminal.ClearScreen();
+        ShowLevelReward();
+    }
+
+    private void ShowLevelReward()
+    {
+        switch (level)
+        {
+            case 1:
+                Terminal.WriteLine("Have a book...");
+                Terminal.WriteLine(@"
+    _______
+   /      /,
+  /      //
+ /______//
+(______(/      
+"               );
+                break;
+            case 2:
+                Terminal.WriteLine("Take a flight...");
+                Terminal.WriteLine(@"   
+       __|__
+--o--o--(_)--o--o--
+"               );
+                break;
+            default:
+                Debug.LogError("Invalid Level reached");
+                break;
+        }
     }
 }

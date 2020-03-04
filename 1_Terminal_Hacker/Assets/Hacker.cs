@@ -6,8 +6,11 @@ public class Hacker : MonoBehaviour {
     [SerializeField]
     [Multiline (10)]
     private string initialText;
+    private const string menuHint = "You may type 'menu' at any time";
     private string[] level1Passwords = { "math", "english", "ruler", "books", "pencil" };
     private string[] level2Passwords = { "airplane", "hangar", "propeller", "luggage","runaway"};
+    private string[] level3Passwords = { "astronaut", "telescope",
+                                         "curiosity", "apollo" };
 
     //Game State
     private enum Screen
@@ -29,31 +32,38 @@ public class Hacker : MonoBehaviour {
         currentScreen = Screen.MainMenu;
         Terminal.ClearScreen ();
         Terminal.WriteLine (initialText);
-
+        
     }
 
     
-    void OnUserInput (string input) {
+    void OnUserInput (string input)
+    {
 
         if (input == "menu") // we can always go back to the main menu
         {
-            ShowMainMenu ();
-        } else if (currentScreen == Screen.MainMenu) 
+            ShowMainMenu();
+        }
+        else if (currentScreen == Screen.MainMenu)
         {
             RunMainMenu(input);
-
-        } else if(currentScreen == Screen.Password)
+            MenuMessage();
+        }
+        else if (currentScreen == Screen.Password)
         {
             CheckPassword(input);
+            MenuMessage();
         }
 
     }
 
-
+    private void MenuMessage()
+    {
+        Terminal.WriteLine(menuHint);
+    }
 
     private void RunMainMenu(string input)
     {
-        bool isValidLevelNumber = (input == "1" || input == "2");
+        bool isValidLevelNumber = (input == "1" || input == "2" || input == "3");
 
         if (isValidLevelNumber)
         {
@@ -65,6 +75,8 @@ public class Hacker : MonoBehaviour {
             Terminal.WriteLine("Please enter a valid level");
         }
     }
+
+    
 
     void AskForPassword ()
     {
@@ -83,6 +95,9 @@ public class Hacker : MonoBehaviour {
                 break;
             case 2:
                 password = level2Passwords[Random.Range(0, level2Passwords.Length)];
+                break;
+            case 3:
+                password = level3Passwords[Random.Range(0, level3Passwords.Length)];
                 break;
             default:
                 Debug.LogError("Invalid Level Number");
@@ -129,6 +144,16 @@ public class Hacker : MonoBehaviour {
        __|__
 --o--o--(_)--o--o--
 "               );
+                break;
+            case 3:
+                Terminal.WriteLine("You've gone to space...");
+                  Terminal.WriteLine(@"   
+.           .
+       ___       .
+  .   / O \    .
+ .   .\___/   .    .
+      /   \
+");
                 break;
             default:
                 Debug.LogError("Invalid Level reached");
